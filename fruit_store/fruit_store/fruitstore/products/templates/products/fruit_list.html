@@ -6,7 +6,21 @@
 {% block content %}
 <div class="container my-5">
     <h1 class="text-center mb-4 text-success">🌿 Cửa Hàng Trái Cây Tươi Ngon</h1>
-    <p class="text-center text-muted mb-5">Tất cả trái cây đều được nhập tươi mỗi ngày!</p>
+    <p class="text-center text-muted mb-4">Tất cả trái cây đều được nhập tươi mỗi ngày!</p>
+
+    <!-- Thanh tìm kiếm -->
+    <div class="d-flex justify-content-center mb-5">
+        <form method="get" class="d-flex w-100" style="max-width: 600px;">
+            <input 
+                type="text" 
+                name="q" 
+                class="form-control me-2" 
+                placeholder="Tìm trái cây (xoài, táo, cam...)" 
+                value="{{ query|default:'' }}"
+            >
+            <button class="btn btn-success" type="submit">🔍</button>
+        </form>
+    </div>
 
     {% if fruits %}
     <div class="row g-4">
@@ -42,7 +56,11 @@
     {% else %}
     <div class="text-center py-5">
         <div class="alert alert-info" role="alert">
-            🛒 Chưa có trái cây nào trong cửa hàng. Vui lòng quay lại sau!
+            {% if query %}
+                🍉 Không tìm thấy trái cây nào phù hợp với "{{ query }}". Vui lòng thử lại!
+            {% else %}
+                🛒 Chưa có trái cây nào trong cửa hàng. Vui lòng quay lại sau!
+            {% endif %}
         </div>
     </div>
     {% endif %}
