@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FruitShop{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    {% block extra_css %}{% endblock %}
+    <style>
+        /* Navbar */
+        .navbar-brand {
+            font-weight: bold;
+            color: #2e7d32 !important;
+        }
+        .navbar-nav .nav-link {
+            color: #333;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #2e7d32;
+        }
+
+        /* Footer - XANH LÁ PASTEL */
+        .footer-bg {
+            background-color: #e8f5e9; /* Nền xanh lá pastel */
+            color: #2e7d32; /* Chữ xanh lá đậm */
+            padding: 3rem 2rem;
+        }
+        .footer-section h5 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2e7d32;
+        }
+        .footer-section p, .footer-section a {
+            color: #2e7d32;
+            text-decoration: none;
+        }
+        .footer-section a:hover {
+            color: #81c784; /* Xanh lá nhạt khi hover */
+        }
+        .footer-social a {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #2e7d32;
+        }
+        .footer-social a:hover {
+            color: #81c784;
+        }
+        .footer-copyright {
+            background-color: #e8f5e9;
+            padding: 1rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(46, 125, 50, 0.2);
+        }
+
+        /* Nội dung chính */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .fruit-card {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            overflow: hidden;
+        }
+        .fruit-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Thông báo */
+        .alert {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">🍎 FruitShop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart_detail' %}">Giỏ hàng</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link">Xin chào, {{ user.username }}!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'order_history' %}">Đơn hàng</a>
+                        </li>
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'admin_dashboard' %}">📊 Admin</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Đăng xuất</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Đăng nhập</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Đăng ký</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hiển thị thông báo -->
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Nội dung chính -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer-bg mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Cột 1: Thông tin công ty -->
+                <div class="col-md-4 mb-4">
+                    <h5>🍎 FruitShop</h5>
+                    <p>Cung cấp trái cây tươi ngon mỗi ngày — an toàn cho sức khỏe.</p>
+                    <p><strong>Địa chỉ:</strong> 7 Đường số 5, Khu đô thị Vạn Phúc, phường Hiệp Bình Phước, Thành phố Thủ Đức</p>
+                    <p><strong>Số điện thoại:</strong> <a href="tel:0924246896">0924246896</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:tiendattanthang@gmail.com">tiendattanthang@gmail.com</a></p>
+                </div>
+
+                <!-- Cột 2: Liên hệ -->
+                <div class="col-md-4 mb-4">
+                    <h5>Liên hệ</h5>
+                    <p><i class="bi bi-geo-alt"></i> 7 Đường số 5, Khu đô thị Vạn Phúc, TP.Thủ Đức</p>
+                    <p><i class="bi bi-telephone"></i> 0924246896</p>
+                    <p><i class="bi bi-envelope"></i> tiendattanthang@gmail.com</p>
+                    <p><i class="bi bi-clock"></i> 7:00 - 21:00 (T2 - CN)</p>
+                </div>
+
+                <!-- Cột 3: Hỗ trợ khách hàng -->
+                <div class="col-md-4 mb-4">
+                    <h5>Hỗ trợ khách hàng</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-question-circle"></i> Câu hỏi thường gặp</li>
+                        <li><i class="bi bi-truck"></i> Chính sách giao hàng</li>
+                        <li><i class="bi bi-cash"></i> Đổi trả & hoàn tiền</li>
+                        <li><i class="bi bi-lock"></i> Bảo mật thông tin</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mạng xã hội & bản quyền -->
+            <hr class="my-4" style="border-color: rgba(46, 125, 50, 0.2);">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-social">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                        <a href="#"><i class="bi bi-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2025 FruitShop 🍉 All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Đặt hàng thành công{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center">
+        <h2 class="text-success">✅ Đặt hàng thành công!</h2>
+        <p class="fs-4">Mã đơn hàng: <strong>#{{ order.id }}</strong></p>
+        <p class="text-muted">Cảm ơn bạn đã mua sắm tại FruitShop!</p>
+    </div>
+
+    {% if order.payment_method == 'bank' %}
+    <div class="alert alert-info mt-4">
+        <h5>💳 Thông tin chuyển khoản</h5>
+        <p><strong>Ngân hàng:</strong> MB Bank (Ngân hàng Quân đội)</p>
+        <p><strong>Số tài khoản:</strong> 0924246896</p>
+        <p><strong>Nội dung chuyển khoản:</strong> DH{{ order.id }} - {{ order.customer_name }}</p>
+        <p class="text-danger"><strong>Lưu ý:</strong> Vui lòng chuyển đúng nội dung để đơn hàng được xử lý nhanh chóng!</p>
+    </div>
+    {% endif %}
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+        <a href="/" class="btn btn-outline-secondary">Tiếp tục mua sắm</a>
+        <a href="{% url 'order_history' %}" class="btn btn-success">Xem đơn hàng</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Quản lý đơn hàng{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">📦 Quản lý đơn hàng</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+    <tr>
+        <th>Mã đơn</th>
+        <th>Khách hàng</th>
+        <th>SĐT</th>
+        <th>Tổng tiền</th>
+        <th>Thanh toán</th>
+        <th>Trạng thái</th>  <!-- ← THÊM DÒNG NÀY -->
+        <th>Thời gian</th>
+        <th>Hành động</th>
+    </tr>
+</thead>
+<tbody>
+    {% for order in orders %}
+    <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.customer_name }}</td>
+        <td>{{ order.phone }}</td>
+        <td class="text-success fw-bold">{{ order.total_amount|intcomma }} ₫</td>
+        <td>
+            {% if order.payment_method == 'cod' %}
+                <span class="badge bg-primary">COD</span>
+            {% else %}
+                <span class="badge bg-info">Chuyển khoản</span>
+            {% endif %}
+        </td>
+        <td>  <!-- ← THÊM KHỐI NÀY -->
+            {% if order.status == 'pending' %}
+                <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+            {% elif order.status == 'confirmed' %}
+                <span class="badge bg-info">Đã xác nhận</span>
+            {% elif order.status == 'delivered' %}
+                <span class="badge bg-success">Đã giao</span>
+            {% else %}
+                <span class="badge bg-danger">Đã hủy</span>
+            {% endif %}
+        </td>
+        <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+        <td>
+            <a href="{% url 'order_detail_admin' order.id %}" class="btn btn-sm btn-outline-info">Xem</a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

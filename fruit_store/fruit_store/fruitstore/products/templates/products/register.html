@@ -1,0 +1,73 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Đăng ký tài khoản</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- HIỂN THỊ LỖI FORM CHUNG -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>Tên đăng nhập:</label>
+                            {{ form.username }}
+                            <!-- Hiển thị lỗi username -->
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label>Mật khẩu:</label>
+                            {{ form.password1 }}
+                            <!-- Hiển thị lỗi mật khẩu -->
+                            {% if form.password1.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label>Xác nhận mật khẩu:</label>
+                            {{ form.password2 }}
+                            <!-- Hiển thị lỗi xác nhận mật khẩu -->
+                            {% if form.password2.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <p>Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập ngay</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

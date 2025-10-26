@@ -1,0 +1,56 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Quản lý tài khoản{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">👥 Quản lý tài khoản người dùng</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Họ tên</th>
+                    <th>Admin</th>
+                    <th>Hoạt động</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.first_name }} {{ u.last_name }}</td>
+                    <td>
+                        {% if u.is_staff %}
+                            <span class="badge bg-success">Có</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Không</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                            <span class="badge bg-primary">Đang hoạt động</span>
+                        {% else %}
+                            <span class="badge bg-danger">Bị khóa</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'edit_user' u.id %}" class="btn btn-sm btn-outline-primary">Sửa</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Không có người dùng nào.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <a href="/" class="btn btn-outline-secondary mt-3">← Quay lại trang chủ</a>
+</div>
+{% endblock %}

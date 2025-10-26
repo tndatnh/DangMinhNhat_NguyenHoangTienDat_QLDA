@@ -1,0 +1,84 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">📊 Admin Dashboard</h2>
+
+    <!-- Cards thống kê -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng đơn hàng</h5>
+                    <p class="card-text fs-3">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Doanh thu</h5>
+                    <p class="card-text fs-3">{{ total_revenue|intcomma }} ₫</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm</h5>
+                    <p class="card-text fs-3">{{ total_fruits }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Người dùng</h5>
+                    <p class="card-text fs-3">{{ total_users }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top sản phẩm bán chạy -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Top 5 sản phẩm bán chạy</h5>
+        </div>
+        <div class="card-body">
+            {% if top_fruits %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng đã bán</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fruit in top_fruits %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ fruit.fruit_name }}</td>
+                            <td>{{ fruit.total_sold }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Chưa có dữ liệu bán hàng.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Liên kết quản lý -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <a href="{% url 'user_management' %}" class="btn btn-outline-primary">👥 Quản lý tài khoản</a>
+        <a href="{% url 'fruit_management' %}" class="btn btn-outline-success">🍈 Quản lý trái cây</a>
+        <a href="{% url 'order_management' %}" class="btn btn-outline-info">📦 Quản lý đơn hàng</a>
+    </div>
+</div>
+{% endblock %}

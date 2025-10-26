@@ -1,0 +1,122 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Chi tiết đơn hàng #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📦 Chi tiết đơn hàng #{{ order.id }}</h2>
+        <a href="{% url 'order_management' %}" class="btn btn-outline-secondary">← Quay lại</a>
+    </div>
+
+    <!-- Thông tin đơn hàng -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin khách hàng</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Họ tên:</strong> {{ order.customer_name }}</p>
+                    <p><strong>Số điện thoại:</strong> {{ order.phone }}</p>
+                    <p><strong>Địa chỉ giao hàng:</strong> {{ order.address }}</p>
+                    {% if order.user %}
+                        <p><strong>Tài khoản:</strong> <span class="badge bg-info">{{ order.user.username }}</span></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Thông tin đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Tổng tiền:</strong> 
+                        <span class="text-success fw-bold fs-5">{{ order.total_amount|intcomma }} ₫</span>
+                    </p>
+                    <p><strong>Hình thức thanh toán:</strong>
+                        {% if order.payment_method == 'cod' %}
+                            <span class="badge bg-primary">Thanh toán khi nhận hàng</span>
+                        {% else %}
+                            <span class="badge bg-info">Chuyển khoản ngân hàng</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Trạng thái:</strong>
+                        {% if order.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                        {% elif order.status == 'confirmed' %}
+                            <span class="badge bg-info">Đã xác nhận</span>
+                        {% elif order.status == 'delivered' %}
+                            <span class="badge bg-success">Đã giao</span>
+                        {% else %}
+                            <span class="badge bg-danger">Đã hủy</span>
+                        {% endif %}
+                    </p>
+                    <p><strong>Thời gian đặt:</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Danh sách sản phẩm</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.fruit_name }}</td>
+                            <td>{{ item.price|intcomma }} ₫</td>
+                            <td>{{ item.quantity }}</td>
+                            <td class="fw-bold">{{ item.total_price|intcomma }} ₫</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="text-end">Tổng cộng:</th>
+                            <th class="text-success fs-5">{{ order.total_amount|intcomma }} ₫</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cập nhật trạng thái (chỉ admin) -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Cập nhật trạng thái</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Thay đổi trạng thái đơn hàng</label>
+                    <select name="status" class="form-select">
+                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Chờ xác nhận</option>
+                        <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>Đã xác nhận</option>
+                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Đã giao</option>
+                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Đã hủy</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật trạng thái</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
