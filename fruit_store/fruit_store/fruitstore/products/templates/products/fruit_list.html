@@ -1,0 +1,123 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa Hàng Trái Cây Tươi</title>
+    <!-- Bootstrap 5 CSS từ CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .fruit-card {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+    .fruit-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* ← quan trọng: cắt ảnh giữ tỷ lệ */
+        object-position: center; /* căn giữa ảnh */
+    }
+    .navbar-brand {
+        font-weight: bold;
+        color: #e74c3c !important;
+    }
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">🍎 FruitShop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart_detail' %}">Giỏ hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Hiển thị thông báo từ Django messages -->
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- Main Content -->
+    <div class="container my-5">
+        <h1 class="text-center mb-4 text-success">🌿 Cửa Hàng Trái Cây Tươi Ngon</h1>
+        <p class="text-center text-muted mb-5">Tất cả trái cây đều được nhập tươi mỗi ngày!</p>
+
+        {% if fruits %}
+        <div class="row g-4">
+            {% for fruit in fruits %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    {% if fruit.image %}
+                        <div class="fruit-card">
+                            <img src="{{ fruit.image.url }}" alt="{{ fruit.name }}">
+                        </div>
+                    {% else %}
+                        <div class="fruit-card">
+                            <span class="text-muted">Chưa có ảnh</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{% url 'fruit_detail' fruit.id %}" class="text-decoration-none text-dark">
+                                {{ fruit.name }}
+                            </a>
+                        </h5>
+                        <p class="card-text flex-grow-1">{{ fruit.description|truncatewords:15 }}</p>
+                        <div class="mt-auto">
+                            <p class="text-success fw-bold fs-5 mb-2">{{ fruit.price|intcomma }} ₫/kg</p>
+                            <p class="text-muted small mb-3">Còn: {{ fruit.stock }} kg</p>
+                            <a href="{% url 'add_to_cart' fruit.id %}" class="btn btn-success w-100">➕ Thêm vào giỏ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="alert alert-info" role="alert">
+                🛒 Chưa có trái cây nào trong cửa hàng. Vui lòng quay lại sau!
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0 text-muted">&copy; 2025 FruitShop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS (cần cho navbar responsive) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

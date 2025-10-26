@@ -1,0 +1,71 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ fruit.name }} - FruitShop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .fruit-image {
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .fruit-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">🍎 FruitShop</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/">← Trang chủ</a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="fruit-image">
+                    {% if fruit.image %}
+                        <img src="{{ fruit.image.url }}" alt="{{ fruit.name }}">
+                    {% else %}
+                        <span class="text-muted">Chưa có ảnh</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h1 class="mb-3">{{ fruit.name }}</h1>
+                <p class="text-success fw-bold fs-3">{{ fruit.price|intcomma }} ₫/kg</p>
+                <p class="text-muted">Còn: {{ fruit.stock }} kg</p>
+                <div class="mt-4">
+                    <p><strong>Mô tả:</strong></p>
+                    <p>{{ fruit.description }}</p>
+                </div>
+                <div class="mt-4">
+                    {% if fruit.stock > 0 %}
+                        <a href="{% url 'add_to_cart' fruit.id %}" class="btn btn-success btn-lg w-100">
+                            🛒 Mua ngay
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary btn-lg w-100" disabled>Hết hàng</button>
+                    {% endif %}
+                </div>
+                <div class="mt-3">
+                    <a href="/" class="btn btn-outline-secondary w-100">← Tiếp tục mua hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
