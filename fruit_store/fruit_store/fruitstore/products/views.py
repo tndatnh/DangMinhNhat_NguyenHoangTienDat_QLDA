@@ -10,6 +10,7 @@ from django.db.models import Sum, Count
 from datetime import datetime, timedelta
 from .forms import UserEditForm
 from .forms import FruitForm
+from django.db.models import Q
 
 @user_passes_test(lambda u: u.is_staff)
 def order_detail_admin(request, order_id):
@@ -305,8 +306,14 @@ def checkout(request):
 
 # ========== Xem sản phẩm ==========
 def fruit_list(request):
-    fruits = Fruit.objects.all()
-    return render(request, 'products/fruit_list.html', {'fruits': fruits})
+    query = request.GET.get('q')
+    if query:
+        fruits = Fruit.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+    else:
+        fruits = Fruit.objects.all()
+    return render(request, 'products/fruit_list.html', {'fruits': fruits, 'query': query})
 
 def fruit_detail(request, fruit_id):
     fruit = get_object_or_404(Fruit, id=fruit_id)
