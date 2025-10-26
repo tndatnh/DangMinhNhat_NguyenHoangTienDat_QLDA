@@ -1,0 +1,43 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Quản lý đơn hàng{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">📦 Quản lý đơn hàng</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>SĐT</th>
+                    <th>Tổng tiền</th>
+                    <th>Thời gian</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.phone }}</td>
+                    <td class="text-success fw-bold">{{ order.total_amount|intcomma }} ₫</td>
+                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'order_detail_admin' order.id %}" class="btn btn-sm btn-outline-info">Xem</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Chưa có đơn hàng nào.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

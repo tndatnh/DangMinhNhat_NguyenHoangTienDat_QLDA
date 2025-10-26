@@ -1,0 +1,55 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Thanh Toán{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">💳 Thanh Toán</h2>
+
+    <div class="row">
+        <!-- Giỏ hàng tóm tắt -->
+        <div class="col-lg-5 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Đơn hàng của bạn</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart.values %}
+                    <p>{{ item.name }} × {{ item.quantity }} = {{ item.price|floatformat:0|intcomma }} ₫</p>
+                    {% endfor %}
+                    <hr>
+                    <h5 class="text-success">Tổng: {{ total|intcomma }} ₫</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form thông tin -->
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Nhập thông tin giao hàng</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.customer_name.label_tag }}</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.phone.label_tag }}</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ form.address.label_tag }}</label>
+                            {{ form.address }}
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">✅ Xác nhận đặt hàng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
